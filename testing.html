@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="index.css" rel="stylesheet">
+    <!--폰트 링크-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@600&display=swap" rel="stylesheet">
+
+    <title>TESTING</title>
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          background-color: #FFFFFF;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          flex-direction: column;
+        }
+      
+        #banner {
+          width: 100%;
+          max-width: 100%;
+          height: auto;
+        }
+      
+        #question-list {
+          list-style: none;
+          padding: 20px;
+          margin-bottom: 20px;
+          width: 100%;
+          max-width: 550px;
+          margin-left: auto;
+          margin-right: auto; 
+        }
+      
+        .question-item {
+          text-align: center;
+          padding: 20px;
+          border-bottom: 2px solid #70c6c0;
+          cursor: pointer;
+          width: 100%;
+          max-width: 700px;
+          margin-bottom: 20px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      
+        .question-number {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+      
+        .question-text {
+          margin-top: 10px;
+          margin-bottom: 15px;
+        }
+      
+        .options {
+          display: flex;
+          justify-content: space-between;
+        }
+      
+        .option {
+          width: 30%;
+          text-align: center;
+          padding: 10px;
+          border: 2px solid #70c6c0;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+      
+        .option:hover {
+          background-color: #70c6c0;
+        }
+      
+        .selected {
+          background-color: #70c6c0;
+          color: #fff;
+        }
+
+        #result-button {
+    border: 2px solid #70c6c0;
+    background-color: #FFFFFF;
+    color: #000000;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: 0px;
+    margin-bottom: 40px;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+    #result-button:hover {
+    background-color: #70c6c0;
+    color: #FFFFFF;
+}
+
+      </style>
+</head>
+
+<body>
+    <img id="banner" src="banner3.png" alt="Banner Image">
+
+    
+
+    <ul id="question-list"></ul>
+    <hr>
+    <script>
+        const questions = [
+            "새로운 도시를 여행할 때 현지의 문화를 체험하는 것을 선호한다.",
+            "주말에는 집에서 책을 읽는 것이 내 스타일이다.",
+            "주말에는 친구들과 함께 야외 활동을 즐기는 편이다.",
+            "최신 영화나 TV 프로그램을 보는 것이 나에게 큰 즐거움이다.",
+            "새로운 요리 레시피를 시도하는 것을 좋아한다.",
+            "예술 전시회나 박물관을 방문하는 것을 즐긴다.",
+            "스포츠 이벤트에 참가하거나 관전하는 것을 좋아한다.",
+            "산책이나 하이킹을 통해 자연을 즐기는 것을 좋아한다.",
+            "음악 페스티벌이나 콘서트에 참석하는 것을 좋아한다.",
+            "혼자 조용한 시간을 갖는 것이 내 기분을 좋게 만든다."
+        ];
+
+        let userAnswers = new Array(questions.length).fill(null);
+
+        function loadQuestions() {
+            const questionList = document.getElementById('question-list');
+            questions.forEach((question, index) => {
+                const questionItem = document.createElement('li');
+                questionItem.classList.add('question-item');
+                questionItem.innerHTML = `
+                    <div class="question-number">Q${index + 1}</div>
+                    <div class="question-text">${question}</div>
+                    <div class="options">
+                        <div class="option" onclick="selectAnswer(${index}, 0)">예</div>
+                        <div class="option" onclick="selectAnswer(${index}, 1)">아니오</div>
+                    </div>
+                `;
+                questionList.appendChild(questionItem);
+
+                if (userAnswers[index] !== null) {
+                    const selectedOption = questionItem.querySelector(`.options .option:nth-child(${userAnswers[index] + 1})`);
+                    selectedOption.classList.add('selected');
+                }
+            });
+        }
+
+        function selectAnswer(questionIndex, answerIndex) {
+
+            userAnswers[questionIndex] = answerIndex;
+
+            const selectedOption = document.querySelector(`.question-item:nth-child(${questionIndex + 1}) .options .option:nth-child(${answerIndex + 1})`);
+            document.querySelectorAll(`.question-item:nth-child(${questionIndex + 1}) .options .option`).forEach(option => option.classList.remove('selected'));
+            selectedOption.classList.add('selected');
+        }
+
+        function calculateResult() {
+            return "결과";
+        }
+
+        function showResult() {
+            const result = calculateResult();
+            document.getElementById('result').textContent = `당신의 취향에 딱 맞는 공간: ${result}`;
+        }
+
+        loadQuestions();
+
+        window.addEventListener('resize', loadQuestions);
+
+        function calculateResult() {
+    const yesCount = userAnswers.filter(answer => answer === 0).length;
+    const noCount = userAnswers.filter(answer => answer === 1).length;
+
+    if (yesCount > noCount) {
+        return "#상당한 인싸력의 소유자! 핫플레이스와 잘 맞는 당신, '홍대 술집' 어떠세요?";}
+      else if (yesCount < noCount) {
+        return "#뒹굴뒹굴 집순이, 집돌이 유형! 혼자 조용한 시간을 갖는 것을 즐기는 당신, '익선동 카페' 어떠세요?";}
+      else if (yesCount === noCount) {
+        return "#문화예술매니아! 예술과 함께하는 당신, '예술의 전당 전시회' 어떠세요?";}
+}
+
+function showResult() {
+    const result = calculateResult();
+    alert(`당신의 취향에 딱 맞는 공간!: ${result}`);
+}
+
+    </script>
+    <button id="result-button" onclick="showResult()">결과 보기</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+
+</html>
